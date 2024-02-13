@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="sidebar">
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a class="nav-link" >
+                     Home
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" >
+                     Items
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" >
+                     Stock
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" >
+                     Build
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" >
+                     Customers
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" >
+                     Sales Orders
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" >
+                     Suppliers
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" >
+                     Manufacturers
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" >
+                     Purchase Orders
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" >
+                     Reports
+                  </a>
+                </li>
+              </ul>
+              <div class="mt-auto">
+                <a  class="btn btn-danger btn-block" href="#">Logout</a>
+              </div>
+            </div>
+          </div>
+          
+  
+      <div class="col-md-9">
+        <div class="container">
+            <div class="container">
+                <div class="row" style="padding: 20px;">
+                  <div class="col">
+                    <h3>Item Dashboard</h3>
+                  </div>
+              
+                  <div class="col">
+                    <table class="table">
+                     
+                      <tbody>
+                        <tr>
+                          <td>Total Categories</td>
+                          <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>Total Items</td>
+                            <td>21</td>
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+          <div>
+            <button (click)="toggleCreateForm()" class="btn btn-lg btn-success mt-3 ml-3" style="margin-left: 30px;">Create Item</button>
+            <div *ngIf="showCreateForm">
+              <form (submit)="createItem()" class="p-4" style="max-width: 400px; margin: 40 auto;">
+                <div class="form-group mb-3">
+                  <input type="text" id="sku" name="sku" placeholder="SKU" [(ngModel)]="itemData.sku" class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                  <input type="text" id="name" name="name" placeholder="Name" [(ngModel)]="itemData.name" class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                  <input type="text" id="Category" name="Category" placeholder="Category" [(ngModel)]="itemData.category" class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                  <input type="text" id="tags" name="tags" placeholder="Tags" [(ngModel)]="itemData.tags" class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                  <input type="text" id="stock_status" name="stock_status" placeholder="Stock Status" [(ngModel)]="itemData.stock_status" class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                  <input type="text" id="available_stock" name="available_stock" placeholder="Available Stock" [(ngModel)]="itemData.available_stock" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-lg btn-success">Create</button>
+                <div *ngIf="errorMessage" class="error-message mt-3">{{ errorMessage }}</div>
+                <div *ngIf="showSuccessMessage" class="alert alert-success mt-3" role="alert">
+                  Item created successfully!
+                </div>
+              </form>
+            </div>
+          </div>
+          <div style="padding: 20px;">
+            <input type="text" class="form-control mb-3"  placeholder="Search..." >
+          </div>
+          <table class="table ">
+            <thead >
+              <tr>
+                <th>
+                    <input type="checkbox">
+                  </th>
+                <th>SKU</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Tags</th>
+                <th> </th>
+                <th>In Stock</th>
+                <th> </th>
+                <th>Available Stock</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of items">
+                <td>
+                    <input type="checkbox" [(ngModel)]="item.selected">
+                  </td>
+                <td>{{ item.sku }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.category }}</td>
+                <td><span *ngIf="item.tags.includes('dollars')" class="icon">
+                    <i class="fas fa-dollar-sign"></i>
+                  </span>
+                  <span *ngIf="item.tags.includes('cart')" class="icon">
+                    <i class="fas fa-shopping-cart"></i>
+                  </span></td>
+                  
+                <td><span *ngIf="item.stock_status === '1'" class="icon" style="color: red;">
+                    <i class="fas fa-times-circle"></i>
+                  </span>
+                  <span *ngIf="item.stock_status !== '1'" class="icon" style="color: green;">
+                    <i class="fas fa-check-circle"></i>
+                  </span></td>
+                <td>{{ item.in_stock }}</td>
+                <td><span *ngIf="item.stock_status === '1'" class="icon" style="color: red;">
+                    <i class="fas fa-times-circle"></i>
+                  </span>
+                  <span *ngIf="item.stock_status !== '1'" class="icon" style="color: green;">
+                    <i class="fas fa-check-circle"></i>
+                  </span></td>
+                <td>{{ item.available_stock }}</td>
+                
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+
+
+      </div>
+    </div>
+  </div>
+  
+  </body>
+  </html>
